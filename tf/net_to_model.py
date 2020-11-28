@@ -4,6 +4,7 @@ import os
 import yaml
 import tfprocess
 from net import Net
+import coremltools as ct
 
 argparser = argparse.ArgumentParser(description='Convert net to model.')
 argparser.add_argument('net',
@@ -35,3 +36,6 @@ if not os.path.exists(root_dir):
     os.makedirs(root_dir)
 tfp.manager.save(checkpoint_number=START_FROM)
 print("Wrote model to {}".format(tfp.manager.latest_checkpoint))
+
+coreml_model = ct.convert(tfp.model, source='tensorflow')
+coreml_model.save(args.net + '.mlmodel')
